@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<article class="rfc-document">
+    <header class="rfc-header-block">
+        <div class="rfc-header-left">
+            <div class="rfc-field">Network Working Group</div>
+            <div class="rfc-field">{{ post.author }}</div>
+        </div>
+        <div class="rfc-header-right">
+            <div class="rfc-field">Request for Comments: {{ post.rfc_number or 'XXX' }}</div>
+            <div class="rfc-field">{{ post.doc_type }}</div>
+            <div class="rfc-field">{% if post.rfc_number %}Obsoletes: xxx{% else %}BCP: xxx{% endif %}</div>
+            <div class="rfc-field">Category: {{ post.doc_type }}</div>
+            <div class="rfc-field">{{ post.updated_at.strftime('%B %Y') if post.updated_at else post.created_at.strftime('%B %Y') }}</div>
+        </div>
+    </header>
+
+    <div class="rfc-title-block">
+        <h1>{{ post.title }}</h1>
+    </div>
+
+    <div class="rfc-meta-table">
+        <table>
+            <tr>
+                <td>Autor:</td>
+                <td>{{ post.author }}</td>
+            </tr>
+            <tr>
+                <td>Estado:</td>
+                <td>{{ post.status }}</td>
+            </tr>
+            {% if post.category %}
+            <tr>
+                <td>Categoría:</td>
+                <td>{{ post.category }}</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <div class="rfc-abstract">
+        <h3>Resumen</h3>
+        <p>{{ post.excerpt or post.content[:300] }}...</p>
+    </div>
+
+    <div class="rfc-content">
+        {{ post.content }}
+    </div>
+</article>
+
+<section class="comments-section">
+    <h3>Comentarios</h3>
+    
+    {% if comments %}
+        {% for comment in comments %}
+        <div class="comment">
+            <div class="comment-header">
+                <span class="comment-author">{{ comment.author_name }}</span>
+                <span class="comment-date">{{ comment.created_at.strftime('%Y-%m-%d') }}</span>
+            </div>
+            <div class="comment-content">{{ comment.content }}</div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty">No hay comentarios aún.</p>
+    {% endif %}
+    
+    <div class="comment-form">
+        <h4>Agregar Comentario</h4>
+        <form method="post" action="/comments">
+            <input type="hidden" name="post_id" value="{{ post.id }}">
+            <div class="form-group">
+                <label for="author_name">Nombre</label>
+                <input type="text" id="author_name" name="author_name" required>
+            </div>
+            <div class="form-group">
+                <label for="author_email">Email</label>
+                <input type="email" id="author_email" name="author_email" required>
+            </div>
+            <div class="form-group">
+                <label for="content">Comentario</label>
+                <textarea id="content" name="content" required></textarea>
+            </div>
+            <button type="submit" class="btn">Publicar</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

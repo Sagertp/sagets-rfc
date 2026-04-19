@@ -1,0 +1,53 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Comentarios - Admin{% endblock %}
+
+{% block admin_content %}
+<h1>Gestión de Comentarios</h1>
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>Post</th>
+            <th>Autor</th>
+            <th>Email</th>
+            <th>Contenido</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for comment in comments %}
+        <tr>
+            <td>
+                {% for post in all_posts %}
+                    {% if post.id == comment.post_id %}
+                        <a href="/post/{{ post.slug }}">{{ post.title[:30] }}...</a>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ comment.author_name }}</td>
+            <td>{{ comment.author_email }}</td>
+            <td>{{ comment.content[:50] }}...</td>
+            <td>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>
+                <span class="status-badge {% if comment.approved %}status-published{% else %}status-draft{% endif %}">
+                    {{ 'Aprobado' if comment.approved else 'Pendiente' }}
+                </span>
+            </td>
+            <td>
+                {% if not comment.approved %}
+                <a href="/admin/comments/approve/{{ comment.id }}" class="btn btn-sm">Aprobar</a>
+                {% endif %}
+                <a href="/admin/comments/delete/{{ comment.id }}" class="btn btn-sm btn-secondary" onclick="return confirm('¿Eliminar comentario?')">Eliminar</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="7" class="empty">No hay comentarios aún.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

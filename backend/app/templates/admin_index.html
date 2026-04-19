@@ -1,0 +1,44 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Admin - Saget's RFC{% endblock %}
+
+{% block admin_content %}
+<div class="admin-header">
+    <h1>Gestión de Posts</h1>
+    <a href="/admin/new" class="btn">Nuevo Post</a>
+</div>
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for post in posts %}
+        <tr>
+            <td><a href="/post/{{ post.slug }}">{{ post.title }}</a></td>
+            <td>{{ post.category or '-' }}</td>
+            <td>{{ post.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+                <span class="status-badge {% if post.published %}status-published{% else %}status-draft{% endif %}">
+                    {{ 'Publicado' if post.published else 'Borrador' }}
+                </span>
+            </td>
+            <td>
+                <a href="/admin/edit/{{ post.slug }}" class="btn btn-sm">Editar</a>
+                <a href="/admin/delete/{{ post.slug }}" class="btn btn-sm btn-secondary" onclick="return confirm('¿Eliminar post?')">Eliminar</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" class="empty">No hay posts aún.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

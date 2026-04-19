@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Infraestructura, redes y virtualización desde el primer bit">
+    <title>{% block title %}Saget's RFC{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="nav">
+        <a href="/" class="site-title">Saget's RFC</a>
+        <div class="nav-links">
+            <a href="/">Documentos</a>
+            <a href="/about">Acerca de</a>
+            <a href="/admin">Admin</a>
+            <a href="#" id="theme-toggle" title="Cambiar tema"><i class="fa-regular fa-lightbulb"></i></a>
+        </div>
+    </nav>
+
+    <script>
+        const toggle = document.getElementById('theme-toggle');
+        const icon = toggle.querySelector('i');
+        const savedTheme = localStorage.getItem('theme');
+        
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            icon.className = 'fa-solid fa-lightbulb';
+        }
+        
+        toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.className = 'fa-solid fa-lightbulb';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.className = 'fa-regular fa-lightbulb';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <p>Infraestructura, redes y virtualización desde el primer bit — 
+            <a href="mailto:sagertp@gmail.com" title="Email"><i class="fa-regular fa-envelope"></i></a>
+            <a href="https://github.com/sagertp" title="GitHub" target="_blank"><i class="fa-brands fa-github"></i></a>
+            <a href="https://twitter.com/spomzper" title="Twitter" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://www.instagram.com/sagert_p/" title="Instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+        </p>
+    </footer>
+</body>
+</html>
