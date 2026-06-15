@@ -4,6 +4,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import Form
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from sqlalchemy.orm import Session
 from app.database import engine, Base, get_db
 from app.routers import posts as posts_router
@@ -12,11 +13,15 @@ from app.routers import admin as admin_router
 from app.models import Post, Comment
 from app.auth import verify_password
 
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "blog.sagertp.com").split(",")
+
 app = FastAPI(
     title="Saget's RFC",
     description="Infraestructura, redes y virtualización desde el primer bit",
     version="1.0.0"
 )
+
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
 
 Base.metadata.create_all(bind=engine)
 
@@ -117,6 +122,7 @@ async def admin_login_post(
             key=ADMIN_COOKIE_NAME,
             value=ADMIN_COOKIE_SECRET,
             httponly=True,
+            secure=True,
             samesite="lax",
             max_age=3600
         )
