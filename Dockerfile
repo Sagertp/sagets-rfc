@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN pip install --no-cache-dir uv
 
-COPY backend/requirements.txt .
+COPY requirements.txt .
 RUN uv pip install --system --no-cache -r requirements.txt
 
 COPY . .
